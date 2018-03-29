@@ -14,6 +14,11 @@ $(document).ready(function(){
 	//var users = firebase.database().ref("Users");
 	var signedInUser;
 
+	// var signedInDiv = $('<div id="signed_in">');
+	// var signedInH2 = $('<h2>', {
+	// 	text: "Please"
+	// })
+
 	$('#logout_button').hide();
 
 	$('#sign_up_form').on('submit', function(e){
@@ -50,6 +55,8 @@ $(document).ready(function(){
 		if (user) {
 			console.log("User Signed In");
 			//console.log(user)
+			$('#signed_in_user').empty();
+			$('#signed_in_user').text("Welcome " + user.email)
 
 			firebaseRef.on("value", function(snapshot) {
 				//console.log(snapshot.val())
@@ -85,6 +92,8 @@ $(document).ready(function(){
 		    // var providerData = user.providerData;
 	    } else {
 	    	console.log("No User Signed In")
+			$('#signed_in_user').empty();
+			$('#signed_in_user').text("Please Sign up or Sign in")
 	    }
 	});
 
