@@ -11,6 +11,7 @@ $(document).ready(function(){
 	firebase.initializeApp(config);
 
 	var firebaseRef = firebase.database().ref();
+	//var users = firebase.database().ref("Users");
 
 	$('#logout_button').hide();
 
@@ -18,7 +19,9 @@ $(document).ready(function(){
 		e.preventDefault();
 		var email = $('#email_su_input').val();
 		var password = $('#password_su_input').val();
-		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
+			firebaseRef.child("Users").child(user.uid).set({email: email, zip_code: $('#zip_su_input').val()})
+		}).catch(function(error) {
 			if(error){
 				throw new Error(error.code + " : " + error.message);
 			}
@@ -39,9 +42,22 @@ $(document).ready(function(){
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
 			console.log("User Signed In");
-			console.log(user)
-			$('#logout_button').show();
+			//console.log(user)
 
+			firebaseRef.on("value", function(snapshot) {
+				//console.log(snapshot.val())
+				var users = snapshot.val().Users;
+				for(var i in users){
+					if(users[i].email == user.email){
+						console.log(users[i])
+					}
+				}
+				//console.log(Object.keys(snapshot.val().Users).length)
+			}, function(errorObject){
+				console.log("Errors handled: " + errorObject.code)
+			})
+
+			$('#logout_button').show();
 			$('#logout_button').on('click', function(){
 				firebase.auth().signOut().then(function() {
 					console.log("Signout Successful");
@@ -50,13 +66,13 @@ $(document).ready(function(){
 					throw new Error("Error: " + error);
 				});
 			})
-		    var displayName = user.displayName;
-		    var email = user.email;
-		    var emailVerified = user.emailVerified;
-		    var photoURL = user.photoURL;
-		    var isAnonymous = user.isAnonymous;
-		    var uid = user.uid;
-		    var providerData = user.providerData;
+		    // var displayName = user.displayName;
+		    // var email = user.email;
+		    // var emailVerified = user.emailVerified;
+		    // var photoURL = user.photoURL;
+		    // var isAnonymous = user.isAnonymous;
+		    // var uid = user.uid;
+		    // var providerData = user.providerData;
 	    } else {
 	    	console.log("No User Signed In")
 	    }
