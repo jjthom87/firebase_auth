@@ -12,6 +12,7 @@ $(document).ready(function(){
 
 	var firebaseRef = firebase.database().ref();
 	//var users = firebase.database().ref("Users");
+	var signedInUser;
 
 	$('#logout_button').hide();
 
@@ -55,12 +56,13 @@ $(document).ready(function(){
 				var users = snapshot.val().Users;
 				for(var i in users){
 					if(users[i].email == user.email){
-						console.log(users[i])
-						//here is where youre information will be displayed
-						//in the html regarding the users
+						signedInUser = users[i]
 					}
 				}
-				//console.log(Object.keys(snapshot.val().Users).length)
+				console.log(signedInUser)
+				//signedInUser will have that user information
+				//here is where youre information will be displayed
+				//in the html regarding the users
 			}, function(errorObject){
 				console.log("Errors handled: " + errorObject.code)
 			})
