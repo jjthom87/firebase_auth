@@ -21,6 +21,9 @@ $(document).ready(function(){
 		var password = $('#password_su_input').val();
 		firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
 			firebaseRef.child("Users").child(user.uid).set({email: email, zip_code: $('#zip_su_input').val()})
+			$('#email_su_input').val("");
+			$('#zip_su_input').val("")
+			$('#password_su_input').val("");
 		}).catch(function(error) {
 			if(error){
 				throw new Error(error.code + " : " + error.message);
@@ -32,7 +35,10 @@ $(document).ready(function(){
 		e.preventDefault();
 		var email = $('#email_si_input').val();
 		var password = $('#password_si_input').val();
-		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		firebase.auth().signInWithEmailAndPassword(email, password).then((success) => {
+			$('#email_si_input').val("");
+			$('#password_si_input').val("");
+		}).catch(function(error) {
 			if(error){
 				throw new Error(error.code + " : " + error.message);
 			}
@@ -50,6 +56,8 @@ $(document).ready(function(){
 				for(var i in users){
 					if(users[i].email == user.email){
 						console.log(users[i])
+						//here is where youre information will be displayed
+						//in the html regarding the users
 					}
 				}
 				//console.log(Object.keys(snapshot.val().Users).length)
